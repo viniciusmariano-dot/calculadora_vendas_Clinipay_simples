@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculadora Vendas Clinipay</title>
+  <style>
+    :root {
+      --bg1: #fff7ed;
+      --bg2: #ffffff;
+      --bg3: #f3f4f6;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --orange-50: #fff7ed;
+      --orange-100: #ffedd5;
+      --orange-500: #f97316;
+      --orange-600: #ea580c;
+      --orange-700: #c2410c;
+      --red-50: #fef2f2;
+      --red-500: #ef4444;
+      --green-50: #ecfdf5;
+      --green-500: #22c55e;
+      --green-700: #15803d;
+      --shadow-lg: 0 25px 50px rgba(15, 23, 42, 0.15);
+      --shadow-md: 0 10px 20px rgba(15, 23, 42, 0.12);
+      --radius-xl: 16px;
+      --radius-2xl: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--orange-50), var(--bg2));
+      color: var(--text);
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 24px 16px 40px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: #111827;
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 34px;
+      }
+    }
+
+    .subtitle-lg {
+      font-size: 16px;
+      color: #4b5563;
+      margin: 0;
+    }
+
+    .chip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      background: radial-gradient(circle at 30% 20%, #fed7aa, #ea580c);
+      box-shadow: 0 14px 28px rgba(248, 113, 22, 0.4);
+    }
+
+    .chip-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        padding: 28px;
+      }
+    }
+
+    .field-label {
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .field-label svg {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+      stroke: var(--orange-600);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .input-text,
+    .select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      font-size: 16px;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+    }
+
+    .input-text::placeholder {
+      color: #9ca3af;
+    }
+
+    .input-text:focus,
+    .select:focus {
+      border-color: var(--orange-500);
+      box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25);
+    }
+
+    .btn-primary {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: 12px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      background: linear-gradient(90deg, var(--orange-500), var(--orange-600));
+      box-shadow: 0 14px 24px rgba(248, 113, 22, 0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.08s, box-shadow 0.08s, filter 0.08s;
+    }
+
+    .btn-primary svg {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .btn-primary:hover:not(.btn-disabled) {
+      filter: brightness(1.05);
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 18px 28px rgba(248, 113, 22, 0.5);
+    }
+
+    .btn-primary:active:not(.btn-disabled) {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.25);
+    }
+
+    .btn-disabled {
+      cursor: not-allowed;
+      background: linear-gradient(90deg, #9ca3af, #6b7280);
+      box-shadow: 0 8px 16px rgba(148, 163, 184, 0.35);
+    }
+
+    .error-box {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border-left: 4px solid var(--red-500);
+      background: var(--red-50);
+      color: #b91c1c;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+
+    .result-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .result-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+    }
+
+    .result-header.standard {
+      background: #f9fafb;
+    }
+
+    .result-header.premium {
+      background: linear-gradient(90deg, var(--orange-500), var(--orange-600));
+      color: #ffffff;
+      border-bottom: none;
+    }
+
+    .result-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .result-dot.standard {
+      background: #111827;
+    }
+
+    .result-dot.premium {
+      background: #ffffff;
+    }
+
+    .result-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .result-body {
+      padding: 18px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .value-label {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .value-main {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .value-main.red {
+      color: #b91c1c;
+    }
+
+    .value-main.orange {
+      color: var(--orange-600);
+    }
+
+    .savings-card {
+      margin-top: 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--orange-500), var(--orange-700));
+      box-shadow: 0 20px 40px rgba(234, 88, 12, 0.65);
+      color: #ffffff;
+      padding: 18px 18px;
+      overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .savings-card {
+        padding: 20px 24px;
+      }
+    }
+
+    .savings-grid {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .savings-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: 1px solid rgba(254, 249, 195, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .savings-icon svg {
+      width: 30px;
+      height: 30px;
+      stroke: #fef9c3;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .savings-title-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .savings-title-row svg {
+      width: 22px;
+      height: 22px;
+      margin-right: 6px;
+      stroke: #bbf7d0;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .savings-value {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    @media (min-width: 640px) {
+      .savings-value {
+        font-size: 32px;
+      }
+    }
+
+    .savings-sub {
+      margin-top: 2px;
+      font-size: 13px;
+      color: #fed7aa;
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.25s ease-out;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="container">
+    <div class="text-center" style="margin-bottom: 24px;">
+      <div class="chip-icon">
+        <!-- Simple calculator icon -->
+        <svg viewBox="0 0 24 24">
+          <rect x="5" y="3" width="14" height="18" rx="2" ry="2"></rect>
+          <rect x="8" y="6" width="8" height="3" rx="1.5"></rect>
+          <line x1="9" y1="12" x2="11" y2="12"></line>
+          <line x1="13" y1="12" x2="15" y2="12"></line>
+          <line x1="9" y1="15" x2="11" y2="15"></line>
+          <line x1="13" y1="15" x2="15" y2="15"></line>
+          <line x1="9" y1="18" x2="11" y2="18"></line>
+          <line x1="13" y1="18" x2="15" y2="18"></line>
+        </svg>
+      </div>
+      <h1>Calculadora Vendas Clinipay</h1>
+      <p class="subtitle-lg">
+        Compare os planos <span style="font-weight:600;">Standard</span> e
+        <span style="font-weight:600; color: var(--orange-600);"> Premium</span> da Clinipay
+      </p>
+    </div>
+
+    <!-- Formulário / Card principal -->
+    <div class="card">
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div>
+          <label for="saleValue" class="field-label">
+            <!-- "DollarSign"-ish -->
+            <svg viewBox="0 0 24 24">
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <path d="M16 7C16 5.343 14.657 4 13 4H9C7.343 4 6 5.343 6 7C6 8.657 7.343 10 9 10H15C16.657 10 18 11.343 18 13C18 14.657 16.657 16 15 16H9C7.343 16 6 17.343 6 19C6 20.657 7.343 22 9 22H14"></path>
+            </svg>
+            Valor da Venda
+          </label>
+          <input
+            type="text"
+            id="saleValue"
+            class="input-text"
+            placeholder="Ex: R$ 20.000,00"
+          />
+        </div>
+
+        <div>
+          <label for="installments" class="field-label">
+            <!-- "CreditCard" -->
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+              <line x1="6" y1="16" x2="10" y2="16"></line>
+            </svg>
+            Quantidade de Parcelas
+          </label>
+          <select id="installments" class="select">
+            <option value="">Selecione...</option>
+            <!-- options serão preenchidas via JS -->
+          </select>
+        </div>
+
+        <div id="errorBox" class="error-box" style="display:none;"></div>
+
+        <button id="calcBtn" class="btn-primary btn-disabled" disabled>
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="3" width="14" height="18" rx="2" ry="2"></rect>
+            <rect x="8" y="6" width="8" height="3" rx="1.5"></rect>
+            <line x1="9" y1="12" x2="11" y2="12"></line>
+            <line x1="13" y1="12" x2="15" y2="12"></line>
+            <line x1="9" y1="15" x2="11" y2="15"></line>
+            <line x1="13" y1="15" x2="15" y2="15"></line>
+          </svg>
+          Calcular Taxa de Venda
+        </button>
+      </div>
+
+      <!-- Resultados -->
+      <div id="resultsContainer" class="results animate-fade-in" style="display:none;">
+        <!-- Standard -->
+        <div class="result-card">
+          <div class="result-header standard">
+            <div class="result-dot standard"></div>
+            <div class="result-title">Plano Standard</div>
+          </div>
+          <div class="result-body">
+            <div class="result-grid">
+              <div>
+                <p class="value-label">Taxa Total</p>
+                <p id="stdFee" class="value-main red">R$ 0,00</p>
+              </div>
+              <div>
+                <p class="value-label">Valor Líquido</p>
+                <p id="stdNet" class="value-main orange">R$ 0,00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium -->
+        <div class="result-card">
+          <div class="result-header premium">
+            <div class="result-dot premium"></div>
+            <div class="result-title">Plano Premium</div>
+          </div>
+          <div class="result-body">
+            <div class="result-grid">
+              <div>
+                <p class="value-label">Taxa Total</p>
+                <p id="prmFee" class="value-main red">R$ 0,00</p>
+              </div>
+              <div>
+                <p class="value-label">Valor Líquido</p>
+                <p id="prmNet" class="value-main orange">R$ 0,00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Economia -->
+        <div class="savings-card">
+          <div class="savings-grid">
+            <div>
+              <div class="savings-title-row">
+                <!-- CheckCircle2-ish -->
+                <svg viewBox="0 0 24 24">
+                  <path d="M9 12.75L11.25 15L15 9.75"></path>
+                  <circle cx="12" cy="12" r="9"></circle>
+                </svg>
+                Economia com Premium
+              </div>
+              <div id="savingsValue" class="savings-value">R$ 0,00</div>
+              <div class="savings-sub">
+                Você economiza escolhendo o plano Premium
+              </div>
+            </div>
+            <div class="savings-icon">
+              <!-- TrendingUp-ish -->
+              <svg viewBox="0 0 24 24">
+                <polyline points="3 17 9 11 13 15 21 7"></polyline>
+                <polyline points="14 7 21 7 21 14"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- /card -->
+  </div>
+</div>
+
+<script>
+(function() {
+  // ===== Tabelas de taxas (copiadas do código React) =====
+  const taxasStandard = [
+    { parcelas: 1,  label: 'À vista', mdr: 0.0239, ant: 0.0199 },
+    { parcelas: 2,  label: '2x',    mdr: 0.0299, ant: 0.0296 },
+    { parcelas: 3,  label: '3x',    mdr: 0.0299, ant: 0.0394 },
+    { parcelas: 4,  label: '4x',    mdr: 0.0299, ant: 0.0493 },
+    { parcelas: 5,  label: '5x',    mdr: 0.0299, ant: 0.0591 },
+    { parcelas: 6,  label: '6x',    mdr: 0.0299, ant: 0.0690 },
+    { parcelas: 7,  label: '7x',    mdr: 0.0349, ant: 0.0788 },
+    { parcelas: 8,  label: '8x',    mdr: 0.0349, ant: 0.0887 },
+    { parcelas: 9,  label: '9x',    mdr: 0.0349, ant: 0.0986 },
+    { parcelas: 10, label: '10x',   mdr: 0.0349, ant: 0.1084 },
+    { parcelas: 11, label: '11x',   mdr: 0.0349, ant: 0.1183 },
+    { parcelas: 12, label: '12x',   mdr: 0.0349, ant: 0.1281 },
+    { parcelas: 13, label: '13x',   mdr: 0.0399, ant: 0.1380 },
+    { parcelas: 14, label: '14x',   mdr: 0.0399, ant: 0.1478 },
+    { parcelas: 15, label: '15x',   mdr: 0.0399, ant: 0.1577 },
+    { parcelas: 16, label: '16x',   mdr: 0.0399, ant: 0.1675 },
+    { parcelas: 17, label: '17x',   mdr: 0.0399, ant: 0.1774 },
+    { parcelas: 18, label: '18x',   mdr: 0.0399, ant: 0.1873 },
+    { parcelas: 19, label: '19x',   mdr: 0.0399, ant: 0.1971 },
+    { parcelas: 20, label: '20x',   mdr: 0.0399, ant: 0.2070 },
+    { parcelas: 21, label: '21x',   mdr: 0.0399, ant: 0.2168 }
+  ];
+
+  const taxasPremium = [
+    { parcelas: 1,  label: 'À vista', mdr: 0.0199, ant: 0.0169 },
+    { parcelas: 2,  label: '2x',    mdr: 0.0239, ant: 0.0251 },
+    { parcelas: 3,  label: '3x',    mdr: 0.0239, ant: 0.0335 },
+    { parcelas: 4,  label: '4x',    mdr: 0.0239, ant: 0.0419 },
+    { parcelas: 5,  label: '5x',    mdr: 0.0239, ant: 0.0503 },
+    { parcelas: 6,  label: '6x',    mdr: 0.0239, ant: 0.0587 },
+    { parcelas: 7,  label: '7x',    mdr: 0.0299, ant: 0.0671 },
+    { parcelas: 8,  label: '8x',    mdr: 0.0299, ant: 0.0754 },
+    { parcelas: 9,  label: '9x',    mdr: 0.0299, ant: 0.0838 },
+    { parcelas: 10, label: '10x',   mdr: 0.0299, ant: 0.0922 },
+    { parcelas: 11, label: '11x',   mdr: 0.0299, ant: 0.1006 },
+    { parcelas: 12, label: '12x',   mdr: 0.0299, ant: 0.1090 },
+    { parcelas: 13, label: '13x',   mdr: 0.0349, ant: 0.1173 },
+    { parcelas: 14, label: '14x',   mdr: 0.0349, ant: 0.1257 },
+    { parcelas: 15, label: '15x',   mdr: 0.0349, ant: 0.1341 },
+    { parcelas: 16, label: '16x',   mdr: 0.0349, ant: 0.1425 },
+    { parcelas: 17, label: '17x',   mdr: 0.0349, ant: 0.1509 },
+    { parcelas: 18, label: '18x',   mdr: 0.0349, ant: 0.1593 },
+    { parcelas: 19, label: '19x',   mdr: 0.0349, ant: 0.1676 },
+    { parcelas: 20, label: '20x',   mdr: 0.0349, ant: 0.1760 },
+    { parcelas: 21, label: '21x',   mdr: 0.0349, ant: 0.1844 }
+  ];
+
+  // ===== Estado =====
+  const state = {
+    saleValue: "",
+    installments: "",
+    result: null,
+    error: ""
+  };
+
+  // ===== Helpers =====
+  const currency = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+
+  function parseSaleValue(raw) {
+    if (!raw) return NaN;
+    // remove tudo que não for dígito, ponto ou vírgula
+    const cleaned = raw.replace(/[^\d.,]/g, '').replace(',', '.');
+    return parseFloat(cleaned);
+  }
+
+  function calculateFees() {
+    state.error = "";
+    const value = parseSaleValue(state.saleValue);
+    const numInstallments = parseInt(state.installments, 10);
+
+    if (isNaN(value) || value <= 0) {
+      state.error = 'Por favor, informe um valor de venda válido.';
+      state.result = null;
+      render();
+      return;
+    }
+
+    if (isNaN(numInstallments) || numInstallments < 1 || numInstallments > 21) {
+      state.error = 'Por favor, informe um número de parcelas entre 1 e 21.';
+      state.result = null;
+      render();
+      return;
+    }
+
+    const standardData = taxasStandard[numInstallments - 1];
+    const premiumData = taxasPremium[numInstallments - 1];
+
+    // Standard
+    const feeStd = (standardData.mdr * value) +
+                   ((value - (standardData.mdr * value)) * standardData.ant);
+    const netStd = value - feeStd;
+
+    // Premium
+    const feePrm = (premiumData.mdr * value) +
+                   ((value - (premiumData.mdr * value)) * premiumData.ant);
+    const netPrm = value - feePrm;
+
+    const savings = feeStd - feePrm;
+
+    state.result = {
+      standard: { fee: feeStd, net: netStd },
+      premium: { fee: feePrm, net: netPrm },
+      savings
+    };
+    render();
+  }
+
+  // ===== DOM refs =====
+  const inputSale = document.getElementById('saleValue');
+  const selectInstallments = document.getElementById('installments');
+  const btnCalc = document.getElementById('calcBtn');
+  const errorBox = document.getElementById('errorBox');
+  const resultsContainer = document.getElementById('resultsContainer');
+
+  const stdFeeEl = document.getElementById('stdFee');
+  const stdNetEl = document.getElementById('stdNet');
+  const prmFeeEl = document.getElementById('prmFee');
+  const prmNetEl = document.getElementById('prmNet');
+  const savingsEl = document.getElementById('savingsValue');
+
+  // Preenche opções de parcelas
+  taxasStandard.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item.parcelas;
+    opt.textContent = item.label;
+    selectInstallments.appendChild(opt);
+  });
+
+  // ===== Render =====
+  function render() {
+    // Botão habilitado/desabilitado
+    const disabled = !state.saleValue || !state.installments;
+    btnCalc.disabled = disabled;
+    if (disabled) {
+      btnCalc.classList.add('btn-disabled');
+    } else {
+      btnCalc.classList.remove('btn-disabled');
+    }
+
+    // Erros
+    if (state.error) {
+      errorBox.style.display = 'block';
+      errorBox.textContent = state.error;
+    } else {
+      errorBox.style.display = 'none';
+      errorBox.textContent = '';
+    }
+
+    // Resultados
+    if (state.result) {
+      resultsContainer.style.display = 'block';
+      stdFeeEl.textContent = currency.format(state.result.standard.fee);
+      stdNetEl.textContent = currency.format(state.result.standard.net);
+      prmFeeEl.textContent = currency.format(state.result.premium.fee);
+      prmNetEl.textContent = currency.format(state.result.premium.net);
+      savingsEl.textContent = currency.format(state.result.savings);
+    } else {
+      resultsContainer.style.display = 'none';
+    }
+  }
+
+  // ===== Eventos =====
+  inputSale.addEventListener('input', (e) => {
+    state.saleValue = e.target.value;
+    render();
+  });
+
+  selectInstallments.addEventListener('change', (e) => {
+    state.installments = e.target.value;
+    render();
+  });
+
+  btnCalc.addEventListener('click', () => {
+    calculateFees();
+  });
+
+  // Init
+  render();
+})();
+</script>
+</body>
+</html>
